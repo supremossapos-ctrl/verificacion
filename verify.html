@@ -1,11 +1,13 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Verificación</title>
+  <title>Authenticity Verification</title>
   <style>
     body{font-family:system-ui,Arial;margin:0;padding:24px;max-width:720px}
+    h1{margin:0 0 10px 0}
+    .title{font-size:34px;font-weight:900;margin:14px 0 10px 0}
     .card{border:1px solid #e5e5e5;border-radius:14px;padding:16px}
     .big{font-size:30px;font-weight:900;margin-top:10px}
     .meta{color:#444;margin-top:10px;line-height:1.45}
@@ -13,13 +15,15 @@
   </style>
 </head>
 <body>
-  <h1>Verificación de autenticidad</h1>
+  <h1>Authenticity Verification</h1>
   <div class="card">
-    <div id="status" class="big">Comprobando…</div>
+    <div id="productTitle" class="title"></div>
+    <div id="status" class="big">Checking…</div>
     <div id="meta" class="meta"></div>
   </div>
 
 <script>
+
 const PUBLIC_KEY_PEM = `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAugMJ76e+l3g7DepjOdzE
 S0FKgnaWM7jlSsUfCjqNUz6qHxmurZfOiPreHywxy5jodZyR96ZZf631PqK6UUai
@@ -49,22 +53,28 @@ function pemToArrayBuffer(pem){
 }
 
 async function run(){
+  // Your existing links use:
+  // c=code, s=signature, m=brand, p=product(we will use this as QUALITY), l=batch
   const code = q("c").trim();
-  const marca = q("m").trim();
-  const producto = q("p").trim();
-  const lote = q("l").trim();
+  const brand = q("m").trim();
+  const quality = q("p").trim(); // <-- product title depends on quality
+  const batch = q("l").trim();
   const sig = q("s").trim();
 
   const statusEl = document.getElementById("status");
   const metaEl = document.getElementById("meta");
+  const titleEl = document.getElementById("productTitle");
+
+  titleEl.textContent = quality ? quality : "Product";
 
   if(!code || !sig){
-    statusEl.textContent = "FALSO";
-    metaEl.textContent = "Enlace incompleto.";
+    statusEl.textContent = "FAKE";
+    metaEl.textContent = "Incomplete link.";
     return;
   }
 
-  const msg = `${code}|${marca}|${producto}|${lote}`;
+  // Same signature message format you already use:
+  const msg = `${code}|${brand}|${quality}|${batch}`;
 
   try{
     const key = await crypto.subtle.importKey(
@@ -83,15 +93,19 @@ async function run(){
     );
 
     if(ok){
-      statusEl.textContent = "REAL";
-      metaEl.innerHTML = `Código: <code>${code}</code><br>Marca: ${marca}<br>Producto: ${producto}<br>Lote: ${lote}`;
+      statusEl.textContent = "AUTHENTIC";
+      metaEl.innerHTML =
+        `Code: <code>${code}</code><br>` +
+        `Brand: ${brand}<br>` +
+        `Quality: ${quality}<br>` +
+        `Batch: ${batch}`;
     }else{
-      statusEl.textContent = "FALSO";
-      metaEl.textContent = "Firma inválida (código no auténtico).";
+      statusEl.textContent = "FAKE";
+      metaEl.textContent = "Invalid signature.";
     }
   }catch(e){
     statusEl.textContent = "ERROR";
-    metaEl.textContent = "No se pudo verificar (clave pública mal pegada o navegador incompatible).";
+    metaEl.textContent = "Verification failed (public key not pasted correctly or unsupported browser).";
   }
 }
 
