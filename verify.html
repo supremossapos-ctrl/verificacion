@@ -9,21 +9,15 @@
   <style>
     :root{
       --bg:#07070a;
-      --panel:#0c0c12;
-      --panel2:#0a0a10;
       --text:#f4f4ff;
       --muted:#b9b9d0;
 
       --orange:#ff8a00;
       --orange2:#ffb000;
 
-      --blue:#21b8ff;
-      --blue2:#0066ff;
-
       --good:#46ff9a;
       --bad:#ff3b5c;
 
-      --accent:#ff8a00;
       --shadow: 0 18px 60px rgba(0,0,0,.65);
       --border: 1px solid rgba(255,138,0,.35);
       --radius: 18px;
@@ -56,7 +50,7 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      padding:22px 16px;
+      padding:18px 14px; /* tighter */
     }
 
     .shell{
@@ -91,8 +85,9 @@
 
     .card > *{position:relative; z-index:1}
 
+    /* ✅ HEADER tighter */
     .header{
-      padding:18px 18px 14px 18px;
+      padding:14px 16px 10px 16px; /* was larger */
       border-bottom: 1px solid rgba(255,255,255,.06);
       background: linear-gradient(180deg, rgba(10,10,16,.88), rgba(10,10,16,.55));
     }
@@ -108,20 +103,23 @@
       line-height:1;
       display:flex;
       flex-direction:column;
-      gap:10px;
+      gap:6px; /* tighter */
       min-width: 0;
     }
 
+    /* ✅ logo image tighter + slightly smaller on mobile */
     .logo img{
-      width: min(360px, 72vw);
+      width: min(330px, 72vw);
       height:auto;
       display:block;
       filter: drop-shadow(0 12px 26px rgba(0,0,0,.55));
+      margin:0;
     }
 
     .logo .sub{
-      margin-top:2px;
-      font-size:13px;
+      margin:0;              /* remove extra */
+      padding-top:2px;       /* tiny */
+      font-size:12px;        /* slightly smaller */
       color:var(--muted);
       letter-spacing:.18em;
       text-transform:uppercase;
@@ -131,7 +129,7 @@
       display:inline-flex;
       align-items:center;
       gap:8px;
-      padding:10px 12px;
+      padding:9px 12px;
       border-radius: 999px;
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(0,0,0,.35);
@@ -140,39 +138,47 @@
       color: rgba(255,255,255,.92);
       white-space:nowrap;
     }
+
     .dot{
       width:10px;height:10px;border-radius:50%;
       background: rgba(255,255,255,.35);
       box-shadow: 0 0 16px rgba(255,255,255,.18);
-      flex: 0 0 auto;
+      flex:0 0 auto;
     }
 
     .main{
-      padding:18px;
+      padding:14px 16px 16px 16px; /* tighter */
       background: linear-gradient(180deg, rgba(10,10,16,.45), rgba(10,10,16,.15));
     }
 
+    /* ✅ QUALITY CARD tighter */
     .quality{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:12px;
-      padding:14px 14px;
+      gap:10px;
+      padding:12px 12px; /* tighter */
       border-radius: 14px;
       background:
         radial-gradient(420px 160px at 15% 20%, rgba(33,184,255,.18), transparent 60%),
         radial-gradient(420px 160px at 85% 30%, rgba(255,138,0,.18), transparent 60%),
         rgba(0,0,0,.32);
       border: 1px solid rgba(255,255,255,.08);
-      min-width: 0;
+      min-width:0;
     }
 
     .q-lettering{
       display:block;
-      width: min(420px, 70vw);
+      width: min(380px, 68vw); /* slightly smaller */
       height:auto;
       filter: drop-shadow(0 10px 20px rgba(0,0,0,.55));
-      max-width: 100%;
+      max-width:100%;
+      margin:0; /* remove extra */
+    }
+
+    /* ✅ reduce gap under lettering */
+    #qualityDesc{
+      margin-top:8px !important; /* was 10 */
     }
 
     .pill{
@@ -186,14 +192,14 @@
       background: rgba(0,0,0,.35);
       color: rgba(255,255,255,.88);
       white-space:nowrap;
-      max-width: 100%;
+      max-width:100%;
       overflow:hidden;
       text-overflow:ellipsis;
     }
 
     .status{
-      margin-top:14px;
-      padding:16px;
+      margin-top:12px;  /* tighter */
+      padding:14px;     /* tighter */
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,.08);
       background: rgba(0,0,0,.33);
@@ -201,15 +207,16 @@
       align-items:center;
       justify-content:space-between;
       gap:12px;
-      min-width: 0;
+      min-width:0;
     }
 
     .status .big{
-      font-size:34px;
+      font-size:32px; /* slightly smaller */
       font-weight:950;
       letter-spacing:.5px;
       text-transform:uppercase;
     }
+
     .status .hint{
       text-align:right;
       color:var(--muted);
@@ -219,7 +226,7 @@
     }
 
     .meta{
-      margin-top:14px;
+      margin-top:12px;
       padding:14px;
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,.08);
@@ -227,7 +234,7 @@
       color: rgba(255,255,255,.88);
       line-height:1.55;
       font-size:14px;
-      overflow-x:auto; /* keeps code in one line with scroll */
+      overflow-x:auto;
     }
 
     .meta code{
@@ -293,29 +300,33 @@
       opacity:.35;
     }
 
-    /* ✅ MOBILE: move badge under logo (left) and move pill bottom-left */
+    /* ✅ MOBILE: keep compact + left alignment */
     @media (max-width: 520px){
       .brand{
         flex-direction:column;
         align-items:flex-start;
+        gap:8px; /* tighter */
       }
+
       .badge{
         align-self:flex-start;
+        margin-top:2px;
       }
 
       .quality{
         flex-direction:column;
         align-items:flex-start;
+        gap:8px;
+        padding:12px;
       }
 
-      /* Put pill bottom-left (where you marked orange) */
       .pill{
         align-self:flex-start;
-        margin-top:10px;
+        margin-top:6px; /* tighter */
       }
 
       .logo img{
-        width: min(300px, 78vw);
+        width: min(320px, 78vw);
       }
     }
   </style>
@@ -351,7 +362,7 @@
           <div class="quality">
             <div style="min-width:0;">
               <img id="qualityLetteringImg" class="q-lettering" alt="Quality">
-              <div style="margin-top:10px;color:var(--muted);font-size:13px;" id="qualityDesc">Verification in progress…</div>
+              <div style="margin-top:8px;color:var(--muted);font-size:13px;" id="qualityDesc">Verification in progress…</div>
             </div>
             <div class="pill" id="pill">QUALITY</div>
           </div>
@@ -489,9 +500,6 @@ async function run(){
   const meta = document.getElementById("meta");
   const qualityDesc = document.getElementById("qualityDesc");
   const pill = document.getElementById("pill");
-
-  const brandImg = document.getElementById("brandTitleImg");
-  if (brandImg) brandImg.src = "assets/qualities/STREETZFARM_LETTERING_BLANCO.png";
 
   const qImg = document.getElementById("qualityLetteringImg");
   if (qImg) qImg.src = qualityLetteringPath(quality);
