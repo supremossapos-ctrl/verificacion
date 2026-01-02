@@ -9,8 +9,6 @@
   <style>
     :root{
       --bg:#07070a;
-      --panel:#0c0c12;
-      --panel2:#0a0a10;
       --text:#f4f4ff;
       --muted:#b9b9d0;
 
@@ -27,6 +25,9 @@
       --shadow: 0 18px 60px rgba(0,0,0,.65);
       --border: 1px solid rgba(255,138,0,.35);
       --radius: 18px;
+
+      /* safe padding so nothing touches the border */
+      --safePad: 14px;
     }
 
     *{box-sizing:border-box}
@@ -43,7 +44,6 @@
       overflow-x:hidden;
     }
 
-    /* subtle grain */
     .grain{
       pointer-events:none;
       position:fixed; inset:0;
@@ -89,7 +89,6 @@
       opacity:.35;
       z-index:0;
     }
-
     .card > *{position:relative; z-index:1}
 
     .header{
@@ -99,7 +98,13 @@
     }
 
     .brand{
-      display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+
+      /* IMPORTANT: keep content inside orange border */
+      padding-right: var(--safePad);
     }
 
     .logo{
@@ -110,7 +115,6 @@
       min-width: 0;
     }
 
-    /* Brand logo always */
     .logo img{
       width: min(360px, 72vw);
       height:auto;
@@ -126,6 +130,7 @@
       text-transform:uppercase;
     }
 
+    /* BADGE (Authentic) - must never overflow */
     .badge{
       display:inline-flex;
       align-items:center;
@@ -137,12 +142,14 @@
       font-weight:700;
       font-size:12px;
       color: rgba(255,255,255,.92);
-      white-space:nowrap;
 
-      /* FIX: do not overflow in mobile */
-      max-width: 46vw;
+      white-space:nowrap;
+      max-width: 220px;
       overflow:hidden;
       text-overflow:ellipsis;
+
+      flex-shrink:0;              /* do not collapse weirdly */
+      margin-right: 2px;          /* tiny buffer */
     }
 
     .dot{
@@ -155,6 +162,9 @@
     .main{
       padding:18px;
       background: linear-gradient(180deg, rgba(10,10,16,.45), rgba(10,10,16,.15));
+
+      /* keep inside border on the right */
+      padding-right: calc(18px + var(--safePad));
     }
 
     .quality{
@@ -169,15 +179,15 @@
         radial-gradient(420px 160px at 85% 30%, rgba(255,138,0,.18), transparent 60%),
         rgba(0,0,0,.32);
       border: 1px solid rgba(255,255,255,.08);
+
+      min-width:0; /* prevent overflow */
     }
 
-    /* Quality lettering image replaces big text */
     .q-lettering{
       display:block;
       width: min(420px, 70vw);
       height:auto;
       filter: drop-shadow(0 10px 20px rgba(0,0,0,.55));
-      max-width: 100%;
     }
 
     .pill{
@@ -191,10 +201,13 @@
       background: rgba(0,0,0,.35);
       color: rgba(255,255,255,.88);
       white-space:nowrap;
-      flex: 0 0 auto;
-      max-width: 100%;
+
+      /* HARD LIMIT so it never goes outside border */
+      max-width: 95%;
       overflow:hidden;
       text-overflow:ellipsis;
+
+      flex: 0 0 auto;
     }
 
     .status{
@@ -215,7 +228,6 @@
       letter-spacing:.5px;
       text-transform:uppercase;
     }
-
     .status .hint{
       text-align:right;
       color:var(--muted);
@@ -234,7 +246,7 @@
       line-height:1.55;
       font-size:14px;
 
-      /* FIX: never break code line; allow horizontal scroll if needed */
+      /* if code is long, scroll instead of wrapping */
       overflow-x:auto;
     }
 
@@ -245,16 +257,19 @@
       border-radius:8px;
       color:#fff;
       font-weight:800;
+
       white-space:nowrap;
       word-break:keep-all;
+      display:inline-block;
     }
 
-    /* Side panel */
     .side{
       padding:18px;
       display:flex;
       flex-direction:column;
       gap:14px;
+
+      padding-right: calc(18px + var(--safePad));
     }
 
     .sidebox{
@@ -287,12 +302,10 @@
       padding-top:6px;
     }
 
-    /* status colors */
     .good{ color: var(--good); text-shadow: 0 0 16px rgba(70,255,154,.15); }
     .bad { color: var(--bad);  text-shadow: 0 0 16px rgba(255,59,92,.12); }
     .warn{ color: var(--orange2); text-shadow: 0 0 16px rgba(255,176,0,.12); }
 
-    /* dynamic accent ring */
     .accent-ring{
       position:absolute; inset:-1px;
       border-radius: var(--radius);
@@ -304,14 +317,26 @@
       opacity:.35;
     }
 
-    /* MOBILE FIXES so nothing gets cut */
+    /* MOBILE: make sure nothing gets clipped */
     @media (max-width: 520px){
-      .logo img{
-        width: min(280px, 76vw);
+      :root{ --safePad: 18px; }
+
+      .header{
+        padding-right: calc(18px + var(--safePad));
+      }
+
+      .brand{
+        flex-wrap:wrap;
+        gap:10px;
       }
 
       .badge{
-        max-width: 44vw;
+        max-width: 100%;
+        align-self:flex-start;
+      }
+
+      .logo img{
+        width: min(300px, 80vw);
       }
 
       .quality{
@@ -321,17 +346,6 @@
 
       .pill{
         align-self:flex-end;
-        max-width: 92%;
-      }
-
-      .status{
-        flex-direction:column;
-        align-items:flex-start;
-      }
-
-      .status .hint{
-        text-align:left;
-        max-width: none;
       }
     }
   </style>
@@ -350,7 +364,6 @@
         <div class="header">
           <div class="brand">
             <div class="logo">
-              <!-- ALWAYS brand logo -->
               <img id="brandTitleImg"
                    src="assets/qualities/STREETZFARM_LETTERING_BLANCO.png"
                    alt="STREETZ FARMZ">
@@ -366,8 +379,7 @@
 
         <div class="main">
           <div class="quality">
-            <div style="min-width:0;">
-              <!-- Quality lettering image -->
+            <div>
               <img id="qualityLetteringImg" class="q-lettering" alt="Quality">
               <div style="margin-top:10px;color:var(--muted);font-size:13px;" id="qualityDesc">Verification in progress…</div>
             </div>
@@ -455,14 +467,13 @@ function setBadge(text, color){
   document.getElementById("badgeText").textContent = text;
   const dot = document.getElementById("dot");
   dot.style.background = color;
-  dot.style.boxShadow = `0 0 16px ${color}55`;
+  dot.style.boxShadow = 0 0 16px ${color}55;
 }
 
 function normQuality(s){
   return (s || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 }
 
-/* Quality -> PNG lettering */
 function qualityLetteringPath(quality){
   const key = normQuality(quality);
   const MAP = {
@@ -478,7 +489,6 @@ function qualityLetteringPath(quality){
     "fresh frozen static": "assets/qualities/LETTERING_STREETZFARMZ_FFSTATIC.png",
     "premium fresh frozen static": "assets/qualities/LETTERING_STREETZFARMZ_PREMIUM_FFSTATIC.png"
   };
-
   return MAP[key] || "assets/qualities/STREETZFARM_LETTERING_BLANCO.png";
 }
 
@@ -513,11 +523,9 @@ async function run(){
   const qualityDesc = document.getElementById("qualityDesc");
   const pill = document.getElementById("pill");
 
-  /* Always keep brand logo on top */
   const brandImg = document.getElementById("brandTitleImg");
   if (brandImg) brandImg.src = "assets/qualities/STREETZFARM_LETTERING_BLANCO.png";
 
-  /* Set the quality lettering inside the card */
   const qImg = document.getElementById("qualityLetteringImg");
   if (qImg) qImg.src = qualityLetteringPath(quality);
 
@@ -525,7 +533,6 @@ async function run(){
   qualityDesc.textContent = th.desc;
   pill.textContent = th.pill;
 
-  document.documentElement.style.setProperty("--accent", th.color);
   setBadge("Checking signature…", th.color);
 
   if(!code || !sig){
@@ -533,11 +540,11 @@ async function run(){
     statusText.className = "big bad";
     statusHint.innerHTML = "Missing parameters in the QR link.";
     setBadge("Invalid QR link", "#ff3b5c");
-    meta.innerHTML = `This QR does not contain the required verification data.`;
+    meta.innerHTML = This QR does not contain the required verification data.;
     return;
   }
 
-  const msg = `${code}|${brand}|${quality}|${batch}`;
+  const msg = ${code}|${brand}|${quality}|${batch};
 
   try{
     const key = await crypto.subtle.importKey(
@@ -562,18 +569,18 @@ async function run(){
       setBadge("Authentic", "#46ff9a");
 
       meta.innerHTML =
-        `Code: <code>${code}</code><br>` +
-        `Brand: <b>${brand || "—"}</b><br>` +
-        `Quality: <b>${quality || "—"}</b><br>` +
-        `Batch: <b>${batch || "—"}</b>`;
+        Code: <code>${code}</code><br> +
+        Brand: <b>${brand || "—"}</b><br> +
+        Quality: <b>${quality || "—"}</b><br> +
+        Batch: <b>${batch || "—"}</b>;
     }else{
       statusText.textContent = "FAKE";
       statusText.className = "big bad";
       statusHint.innerHTML = "Signature mismatch.";
       setBadge("Fake", "#ff3b5c");
       meta.innerHTML =
-        `This QR signature is not valid.<br>` +
-        `Do not trust this product.`;
+        This QR signature is not valid.<br> +
+        Do not trust this product.;
     }
 
   }catch(e){
@@ -582,8 +589,8 @@ async function run(){
     statusHint.innerHTML = "Verification failed.";
     setBadge("Error", "#ffb000");
     meta.innerHTML =
-      `Your browser could not verify the signature.<br>` +
-      `Most common reason: the public key was not pasted correctly into verify.html.`;
+      Your browser could not verify the signature.<br> +
+      Most common reason: the public key was not pasted correctly into verify.html.;
   }
 }
 
@@ -591,5 +598,3 @@ run();
 </script>
 </body>
 </html>
-
-
