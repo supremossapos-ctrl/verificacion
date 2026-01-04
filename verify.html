@@ -104,9 +104,12 @@
       flex-direction:column;
       gap:6px;
       min-width:0;
+
+      /* ✅ left alignment */
+      align-items:flex-start;
+      text-align:left;
     }
 
-    /* ✅ IMPORTANT: prevent broken image from reserving giant space */
     .logo img{
       display:none;                 /* hidden until loaded */
       width: min(300px, 72vw);
@@ -116,7 +119,7 @@
     }
 
     .brand-fallback{
-      display:block;                /* visible by default */
+      display:block;
       font-weight:950;
       letter-spacing:.06em;
       text-transform:uppercase;
@@ -124,6 +127,9 @@
       line-height:1;
       color:#fff;
       text-shadow: 0 0 18px rgba(255,138,0,.15);
+
+      /* ✅ left */
+      text-align:left;
     }
 
     .logo .sub{
@@ -133,6 +139,9 @@
       color:var(--muted);
       letter-spacing:.18em;
       text-transform:uppercase;
+
+      /* ✅ left */
+      text-align:left;
     }
 
     .badge{
@@ -177,6 +186,15 @@
       min-width:0;
     }
 
+    /* ✅ quality block left */
+    .qwrap{
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      text-align:left;
+    }
+
     .q-lettering{
       display:block;
       width: min(340px, 68vw);
@@ -184,6 +202,9 @@
       max-width:100%;
       margin:0;
       filter: drop-shadow(0 10px 20px rgba(0,0,0,.55));
+
+      /* ✅ left */
+      align-self:flex-start;
     }
 
     #qualityDesc{
@@ -191,6 +212,9 @@
       color:var(--muted);
       font-size:13px;
       line-height:1.25;
+
+      /* ✅ left */
+      text-align:left;
     }
 
     .pill{
@@ -250,7 +274,6 @@
       overflow-x:auto;
     }
 
-    /* ✅ QR code in ONE LINE */
     .meta code{
       background: rgba(255,255,255,.06);
       border: 1px solid rgba(255,255,255,.10);
@@ -369,7 +392,7 @@
 
         <div class="main">
           <div class="quality">
-            <div style="min-width:0;">
+            <div class="qwrap">
               <img id="qualityLetteringImg" class="q-lettering" alt="Quality lettering">
               <div id="qualityDesc">Verification in progress…</div>
             </div>
@@ -435,7 +458,7 @@ rfBeLL6n3Bdr3UKwmBL5S7xE/W33A9JW5gt3+no2waQFsTwDahorjLIzJ4nHsSeV
 8wIDAQAB
 -----END PUBLIC KEY-----`;
 
-const CACHE_BUST = "v=7"; // change if iPhone caches
+const CACHE_BUST = "v=9";
 const BRAND_LOGO_PATH = "assets/qualities/STREETZFARM_LETTERING_BLANCO.png";
 
 function q(name){ return new URL(location.href).searchParams.get(name) || ""; }
@@ -520,7 +543,6 @@ function setupBrandLogo(){
   };
 
   brandImg.onerror = () => {
-    // If path is wrong / not uploaded
     brandImg.style.display = "none";
     fallback.style.display = "block";
   };
