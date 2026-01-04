@@ -106,22 +106,21 @@
       min-width:0;
     }
 
-    /* Brand logo image */
+    /* ✅ IMPORTANT: prevent broken image from reserving giant space */
     .logo img{
+      display:none;                 /* hidden until loaded */
       width: min(300px, 72vw);
       height:auto;
-      display:block;
       filter: drop-shadow(0 12px 26px rgba(0,0,0,.55));
       margin:0;
     }
 
-    /* Fallback text if logo image fails */
     .brand-fallback{
-      display:none; /* shown by JS if image fails */
+      display:block;                /* visible by default */
       font-weight:950;
       letter-spacing:.06em;
       text-transform:uppercase;
-      font-size:28px;
+      font-size:22px;
       line-height:1;
       color:#fff;
       text-shadow: 0 0 18px rgba(255,138,0,.15);
@@ -251,7 +250,7 @@
       overflow-x:auto;
     }
 
-    /* ✅ QR code in one line */
+    /* ✅ QR code in ONE LINE */
     .meta code{
       background: rgba(255,255,255,.06);
       border: 1px solid rgba(255,255,255,.10);
@@ -413,7 +412,7 @@
           <div class="sidebox">
             <h3>Tip</h3>
             <p>
-              If your phone opens a different domain than <b>streetz-farmz.github.io</b>,
+              If your phone opens a different domain than <b>tz-farmz.github.io</b>,
               the QR may be cloned.
             </p>
           </div>
@@ -436,7 +435,7 @@ rfBeLL6n3Bdr3UKwmBL5S7xE/W33A9JW5gt3+no2waQFsTwDahorjLIzJ4nHsSeV
 8wIDAQAB
 -----END PUBLIC KEY-----`;
 
-const CACHE_BUST = "v=5"; // ⬅️ change whenever you want to force refresh
+const CACHE_BUST = "v=7"; // change if iPhone caches
 const BRAND_LOGO_PATH = "assets/qualities/STREETZFARM_LETTERING_BLANCO.png";
 
 function q(name){ return new URL(location.href).searchParams.get(name) || ""; }
@@ -458,4 +457,161 @@ function pemToArrayBuffer(pem){
 }
 
 function setBadge(text, color){
-  document.getElementById("badgeText").text
+  document.getElementById("badgeText").textContent = text;
+  const dot = document.getElementById("dot");
+  dot.style.background = color;
+  dot.style.boxShadow = `0 0 16px ${color}55`;
+}
+
+function normQuality(s){
+  return (s || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+}
+
+function withCacheBust(url){
+  if(!url) return url;
+  return url.includes("?") ? `${url}&${CACHE_BUST}` : `${url}?${CACHE_BUST}`;
+}
+
+function qualityLetteringPath(quality){
+  const key = normQuality(quality);
+  const MAP = {
+    "drysift": "assets/qualities/LETTERING_STREETZFARMZ_DRYSIFT.png",
+    "premium drysift": "assets/qualities/LETTERING_STREETZFARMZ_PREMIUM_DRYSIFT.png",
+
+    "frozen": "assets/qualities/LETTERING_STREETZFARMZ_FROZEN_.png",
+    "premium frozen": "assets/qualities/LETTERING_STREETZFARMZ_PREMIUM_FROZEN_.png",
+
+    "static": "assets/qualities/LETTERING_STREETZFARMZ_STATIC.png",
+    "premium static": "assets/qualities/LETTERING_STREETZFARMZ_PREMIUM_STATIC_.png",
+
+    "fresh frozen static": "assets/qualities/LETTERING_STREETZFARMZ_FFSTATIC.png",
+    "premium fresh frozen static": "assets/qualities/LETTERING_STREETZFARMZ_PREMIUM_FFSTATIC.png"
+  };
+  return MAP[key] || BRAND_LOGO_PATH;
+}
+
+function qualityTheme(quality){
+  const qq = (quality || "").toLowerCase();
+
+  if(qq.includes("premium") && qq.includes("frozen")) return { pill:"PREMIUM FROZEN", desc:"Premium frozen selection", color:"#21b8ff" };
+  if(qq.includes("frozen")) return { pill:"FROZEN", desc:"Cold-cured selection", color:"#21b8ff" };
+
+  if(qq.includes("premium") && qq.includes("drysift")) return { pill:"PREMIUM DRYSIFT", desc:"Premium dry sift refinement", color:"#d6d6e8" };
+  if(qq.includes("drysift")) return { pill:"DRYSIFT", desc:"Dry sift refinement", color:"#d6d6e8" };
+
+  if(qq.includes("premium") && qq.includes("fresh") && qq.includes("static")) return { pill:"PREMIUM FF STATIC", desc:"Premium fresh frozen static", color:"#00d1ff" };
+  if(qq.includes("fresh") && qq.includes("static")) return { pill:"FF STATIC", desc:"Fresh frozen static", color:"#00d1ff" };
+
+  if(qq.includes("premium") && qq.includes("static")) return { pill:"PREMIUM STATIC", desc:"Premium static refinement", color:"#0066ff" };
+  if(qq.includes("static")) return { pill:"STATIC", desc:"Electro refined texture", color:"#0066ff" };
+
+  return { pill:"QUALITY", desc:"Signature-linked unit", color:"#ff8a00" };
+}
+
+function setupBrandLogo(){
+  const brandImg = document.getElementById("brandTitleImg");
+  const fallback = document.getElementById("brandFallback");
+
+  brandImg.src = withCacheBust(BRAND_LOGO_PATH);
+
+  brandImg.onload = () => {
+    fallback.style.display = "none";
+    brandImg.style.display = "block";
+  };
+
+  brandImg.onerror = () => {
+    // If path is wrong / not uploaded
+    brandImg.style.display = "none";
+    fallback.style.display = "block";
+  };
+}
+
+async function run(){
+  setupBrandLogo();
+
+  const code = q("c").trim();
+  const brand = q("m").trim();
+  const quality = q("p").trim();
+  const batch = q("l").trim();
+  const sig = q("s").trim();
+
+  const statusText = document.getElementById("statusText");
+  const statusHint = document.getElementById("statusHint");
+  const meta = document.getElementById("meta");
+  const qualityDesc = document.getElementById("qualityDesc");
+  const pill = document.getElementById("pill");
+
+  const qImg = document.getElementById("qualityLetteringImg");
+  if (qImg) qImg.src = withCacheBust(qualityLetteringPath(quality));
+
+  const th = qualityTheme(quality);
+  qualityDesc.textContent = th.desc;
+  pill.textContent = th.pill;
+
+  setBadge("Checking signature…", th.color);
+
+  if(!code || !sig){
+    statusText.textContent = "FAKE";
+    statusText.className = "big bad";
+    statusHint.innerHTML = "Missing parameters in the QR link.";
+    setBadge("Invalid QR link", "#ff3b5c");
+    meta.innerHTML = `This QR does not contain the required verification data.`;
+    return;
+  }
+
+  const msg = `${code}|${brand}|${quality}|${batch}`;
+
+  try{
+    const key = await crypto.subtle.importKey(
+      "spki",
+      pemToArrayBuffer(PUBLIC_KEY_PEM),
+      { name:"RSA-PSS", hash:"SHA-256" },
+      false,
+      ["verify"]
+    );
+
+    const ok = await crypto.subtle.verify(
+      { name:"RSA-PSS", saltLength:32 },
+      key,
+      b64urlToBytes(sig),
+      new TextEncoder().encode(msg)
+    );
+
+    if(ok){
+      statusText.textContent = "AUTHENTIC";
+      statusText.className = "big good";
+      statusHint.innerHTML = "Signature verified successfully.";
+      setBadge("Authentic", "#46ff9a");
+
+      meta.innerHTML =
+        `Code: <code>${code}</code><br>` +
+        `Brand: <b>${brand || "—"}</b><br>` +
+        `Quality: <b>${quality || "—"}</b><br>` +
+        `Batch: <b>${batch || "—"}</b>`;
+    }else{
+      statusText.textContent = "FAKE";
+      statusText.className = "big bad";
+      statusHint.innerHTML = "Signature mismatch.";
+      setBadge("Fake", "#ff3b5c");
+
+      meta.innerHTML =
+        `This QR signature is not valid.<br>` +
+        `Do not trust this product.`;
+    }
+
+  }catch(e){
+    statusText.textContent = "ERROR";
+    statusText.className = "big warn";
+    statusHint.innerHTML = "Verification failed.";
+    setBadge("Error", "#ffb000");
+
+    meta.innerHTML =
+      `Your browser could not verify the signature.<br>` +
+      `Most common reason: the public key was not pasted correctly into verify.html.`;
+  }
+}
+
+run();
+</script>
+</body>
+</html>
