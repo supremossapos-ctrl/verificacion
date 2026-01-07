@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>STREETZ FARMZ — Generic QRs</title>
+  <meta name="theme-color" content="#0b0b0f"/>
+  <style>
+    body{margin:0; font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial; background:#0b0b0f; color:#fff;}
+    .wrap{max-width:980px; margin:0 auto; padding:22px 16px;}
+    h1{margin:0 0 10px 0;}
+    .grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:14px; margin-top:14px;}
+    .card{background:rgba(255,255,255,.04); border:1px solid rgba(255,138,0,.35); border-radius:16px; padding:14px;}
+    .row{display:flex; align-items:center; justify-content:space-between; gap:10px;}
+    .qr{margin-top:10px; background:#fff; border-radius:12px; padding:10px; display:inline-block;}
+    button{cursor:pointer; border-radius:12px; border:1px solid rgba(255,255,255,.15); background:rgba(0,0,0,.35); color:#fff; padding:8px 10px; font-weight:700;}
+    code{background:rgba(255,255,255,.07); padding:2px 7px; border-radius:8px; white-space:nowrap;}
+    .note{opacity:.8; font-size:13px; line-height:1.45}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Generic QRs (per quality)</h1>
+  <p class="note">
+    Estos QRs apuntan a <code>chooser.html</code> y luego redirigen a <code>verify.html</code> usando un item real desde <code>assets/pools/*.json</code>.
+  </p>
+
+  <div id="grid" class="grid"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<script>
+const QUALITIES = [
+  {slug:"frozen", label:"Frozen"},
+  {slug:"premium-frozen", label:"Premium Frozen"},
+  {slug:"static", label:"Static"},
+  {slug:"premium-static", label:"Premium Static"},
+  {slug:"drysift", label:"Drysift"},
+  {slug:"premium-drysift", label:"Premium Drysift"},
+  {slug:"fresh-frozen-static", label:"Fresh Frozen Static"},
+  {slug:"premium-fresh-frozen-static", label:"Premium Fresh Frozen Static"},
+];
+
+function baseDir(){
+  return location.href.replace(/[^\/]*$/, "");
+}
+
+function makeCard(q){
+  const card = document.createElement("div");
+  card.className = "card";
+
+  const top = document.createElement("div");
+  top.className = "row";
+
+  const title = document.createElement("div");
+  title.innerHTML = <b>${q.label}</b><div style="opacity:.7;font-size:12px;">pool: ${q.slug}.json</div>;
+
+  const btn = document.createElement("button");
+  btn.textContent = "Download PNG";
+
+  top.appendChild(title);
+  top.appendChild(btn);
+
+  const link = document.createElement("div");
+  link.style.marginTop = "10px";
+  const url = ${baseDir()}chooser.html?q=${encodeURIComponent(q.slug)};
+  link.innerHTML = URL: <code>${url}</code>;
+
+  const qrBox = document.createElement("div");
+  qrBox.className = "qr";
+
+  const canvas = document.createElement("canvas");
+
+  card.appendChild(top);
+  card.appendChild(link);
+  card.appendChild(qrBox);
+  qrBox.appendChild(canvas);
+
+  QRCode.toCanvas(canvas, url, {margin:1, width:220}, (err)=>{
+    if(err){
+      qrBox.innerHTML = <div style="color:#000">QR error</div>;
+    }
+  });
+
+  btn.onclick = () => {
+    const a = document.createElement("a");
+    a.download = QR_${q.slug}.png;
+    a.href = canvas.toDataURL("image/png");
+    a.click();
+  };
+
+  return card;
+}
+
+const grid = document.getElementById("grid");
+QUALITIES.forEach(q => grid.appendChild(makeCard(q)));
+</script>
+</body>
+</html>
