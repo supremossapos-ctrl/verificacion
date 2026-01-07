@@ -1,38 +1,4 @@
-[2:44, 7/1/2026] £: <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>STREETZ FARMZ — Authenticity</title>
-  <meta name="theme-color" content="#0b0b0f"/>
-
-  <style>
-    :root{
-      --bg:#07070a;
-      --panel:#0c0c12;
-      --text:#f4f4ff;
-      --muted:#b9b9d0;
-
-      --orange:#ff8a00;
-      --orange2:#ffb000;
-
-      --blue:#21b8ff;
-      --blue2:#0066ff;
-
-      --good:#46ff9a;
-      --bad:#ff3b5c;
-
-      --shadow: 0 18px 60px rgba(0,0,0,.65);
-      --border: 1px solid rgba(255,138,0,.35);
-      --radius: 18px;
-    }
-
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;…
-[2:55, 7/1/2026] £: <!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
@@ -84,7 +50,7 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      padding:18px 14px;
+      padding:12px 12px;
     }
 
     .shell{
@@ -120,7 +86,7 @@
     .card > *{position:relative; z-index:1}
 
     .header{
-      padding:14px 16px 10px 16px;
+      padding:12px 14px 10px 14px;
       border-bottom: 1px solid rgba(255,255,255,.06);
       background: linear-gradient(180deg, rgba(10,10,16,.88), rgba(10,10,16,.55));
     }
@@ -138,22 +104,32 @@
       flex-direction:column;
       gap:6px;
       min-width:0;
+
+      /* ✅ left alignment */
+      align-items:flex-start;
+      text-align:left;
     }
 
     .logo img{
-      width:min(340px, 78vw);
+      display:none;                 /* hidden until loaded */
+      width: min(300px, 72vw);
       height:auto;
-      display:block;
-      margin:0;
       filter: drop-shadow(0 12px 26px rgba(0,0,0,.55));
+      margin:0;
     }
 
-    .logoFallback{
+    .brand-fallback{
+      display:block;
       font-weight:950;
-      letter-spacing:.5px;
+      letter-spacing:.06em;
       text-transform:uppercase;
-      font-size:36px;
-      margin:0;
+      font-size:22px;
+      line-height:1;
+      color:#fff;
+      text-shadow: 0 0 18px rgba(255,138,0,.15);
+
+      /* ✅ left */
+      text-align:left;
     }
 
     .logo .sub{
@@ -163,6 +139,9 @@
       color:var(--muted);
       letter-spacing:.18em;
       text-transform:uppercase;
+
+      /* ✅ left */
+      text-align:left;
     }
 
     .badge{
@@ -177,6 +156,7 @@
       font-size:12px;
       color: rgba(255,255,255,.92);
       white-space:nowrap;
+      max-width: 100%;
     }
 
     .dot{
@@ -187,13 +167,13 @@
     }
 
     .main{
-      padding:14px 16px 16px 16px;
+      padding:12px 14px 14px 14px;
       background: linear-gradient(180deg, rgba(10,10,16,.45), rgba(10,10,16,.15));
     }
 
     .quality{
       display:flex;
-      align-items:center;
+      align-items:flex-end;
       justify-content:space-between;
       gap:10px;
       padding:12px 12px;
@@ -206,13 +186,35 @@
       min-width:0;
     }
 
+    /* ✅ quality block left */
+    .qwrap{
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      text-align:left;
+    }
+
     .q-lettering{
       display:block;
-      width:min(380px, 76vw);
+      width: min(340px, 68vw);
       height:auto;
       max-width:100%;
       margin:0;
       filter: drop-shadow(0 10px 20px rgba(0,0,0,.55));
+
+      /* ✅ left */
+      align-self:flex-start;
+    }
+
+    #qualityDesc{
+      margin-top:6px !important;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.25;
+
+      /* ✅ left */
+      text-align:left;
     }
 
     .pill{
@@ -232,8 +234,8 @@
     }
 
     .status{
-      margin-top:12px;
-      padding:14px;
+      margin-top:10px;
+      padding:12px;
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,.08);
       background: rgba(0,0,0,.33);
@@ -249,6 +251,7 @@
       font-weight:950;
       letter-spacing:.5px;
       text-transform:uppercase;
+      line-height:1;
     }
 
     .status .hint{
@@ -260,8 +263,8 @@
     }
 
     .meta{
-      margin-top:12px;
-      padding:14px;
+      margin-top:10px;
+      padding:12px;
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,.08);
       background: rgba(0,0,0,.26);
@@ -271,7 +274,6 @@
       overflow-x:auto;
     }
 
-    /* ✅ Code always one line */
     .meta code{
       background: rgba(255,255,255,.06);
       border: 1px solid rgba(255,255,255,.10);
@@ -281,11 +283,8 @@
       font-weight:800;
       white-space:nowrap;
       word-break:keep-all;
-      overflow-wrap:normal;
       display:inline-block;
       max-width:100%;
-      overflow-x:auto;
-      vertical-align:bottom;
     }
 
     .side{
@@ -341,10 +340,27 @@
     }
 
     @media (max-width: 520px){
-      .brand{ flex-direction:column; align-items:flex-start; gap:8px; }
-      .badge{ align-self:flex-start; }
-      .quality{ flex-direction:column; align-items:flex-start; gap:8px; }
-      .pill{ align-self:flex-start; margin-top:6px; }
+      .brand{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:8px;
+      }
+      .badge{
+        align-self:flex-start;
+        margin-top:2px;
+      }
+      .logo img{
+        width: min(290px, 80vw);
+      }
+      .quality{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:8px;
+      }
+      .pill{
+        align-self:flex-start;
+        margin-top:6px;
+      }
     }
   </style>
 </head>
@@ -361,11 +377,9 @@
 
         <div class="header">
           <div class="brand">
-            <div class="logo" id="logoBox">
-              <img id="brandTitleImg"
-                   src="assets/qualities/STREETZFARM_LETTERING_BLANCO.png"
-                   alt="STREETZ FARMZ"
-                   onerror="document.getElementById('logoBox').innerHTML='<div class=logoFallback>STREETZ FARMZ</div><div class=sub>AUTHENTICITY CHECK</div>';">
+            <div class="logo">
+              <img id="brandTitleImg" alt="STREETZ FARMZ">
+              <div id="brandFallback" class="brand-fallback">STREETZ FARMZ</div>
               <div class="sub">AUTHENTICITY CHECK</div>
             </div>
 
@@ -378,9 +392,9 @@
 
         <div class="main">
           <div class="quality">
-            <div style="min-width:0;">
-              <img id="qualityLetteringImg" class="q-lettering" alt="Quality" />
-              <div style="margin-top:8px;color:var(--muted);font-size:13px;" id="qualityDesc">Verification in progress…</div>
+            <div class="qwrap">
+              <img id="qualityLetteringImg" class="q-lettering" alt="Quality lettering">
+              <div id="qualityDesc">Verification in progress…</div>
             </div>
             <div class="pill" id="pill">QUALITY</div>
           </div>
@@ -419,9 +433,10 @@
           </div>
 
           <div class="sidebox">
-            <h3>Generic QRs</h3>
+            <h3>Tip</h3>
             <p>
-              Open <b>qrs.html</b> to generate a generic QR per quality.
+              If your phone opens a different domain than <b>tz-farmz.github.io</b>,
+              the QR may be cloned.
             </p>
           </div>
 
@@ -442,6 +457,9 @@ uUjKgPud5NUVE5rv17a3OHbv+oOLTH120VsTT+VPs2jcFTXXiXDSiWmza6IXGkhk
 rfBeLL6n3Bdr3UKwmBL5S7xE/W33A9JW5gt3+no2waQFsTwDahorjLIzJ4nHsSeV
 8wIDAQAB
 -----END PUBLIC KEY-----`;
+
+const CACHE_BUST = "v=9";
+const BRAND_LOGO_PATH = "assets/qualities/STREETZFARM_LETTERING_BLANCO.png";
 
 function q(name){ return new URL(location.href).searchParams.get(name) || ""; }
 
@@ -472,19 +490,27 @@ function normQuality(s){
   return (s || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 }
 
+function withCacheBust(url){
+  if(!url) return url;
+  return url.includes("?") ? ${url}&${CACHE_BUST} : ${url}?${CACHE_BUST};
+}
+
 function qualityLetteringPath(quality){
   const key = normQuality(quality);
   const MAP = {
     "drysift": "assets/qualities/LETTERING_STREETZFARMZ_DRYSIFT.png",
     "premium drysift": "assets/qualities/LETTERING_STREETZFARMZ_PREMIUM_DRYSIFT.png",
+
     "frozen": "assets/qualities/LETTERING_STREETZFARMZ_FROZEN_.png",
     "premium frozen": "assets/qualities/LETTERING_STREETZFARMZ_PREMIUM_FROZEN_.png",
+
     "static": "assets/qualities/LETTERING_STREETZFARMZ_STATIC.png",
     "premium static": "assets/qualities/LETTERING_STREETZFARMZ_PREMIUM_STATIC_.png",
+
     "fresh frozen static": "assets/qualities/LETTERING_STREETZFARMZ_FFSTATIC.png",
     "premium fresh frozen static": "assets/qualities/LETTERING_STREETZFARMZ_PREMIUM_FFSTATIC.png"
   };
-  return MAP[key] || "assets/qualities/STREETZFARM_LETTERING_BLANCO.png";
+  return MAP[key] || BRAND_LOGO_PATH;
 }
 
 function qualityTheme(quality){
@@ -505,7 +531,26 @@ function qualityTheme(quality){
   return { pill:"QUALITY", desc:"Signature-linked unit", color:"#ff8a00" };
 }
 
+function setupBrandLogo(){
+  const brandImg = document.getElementById("brandTitleImg");
+  const fallback = document.getElementById("brandFallback");
+
+  brandImg.src = withCacheBust(BRAND_LOGO_PATH);
+
+  brandImg.onload = () => {
+    fallback.style.display = "none";
+    brandImg.style.display = "block";
+  };
+
+  brandImg.onerror = () => {
+    brandImg.style.display = "none";
+    fallback.style.display = "block";
+  };
+}
+
 async function run(){
+  setupBrandLogo();
+
   const code = q("c").trim();
   const brand = q("m").trim();
   const quality = q("p").trim();
@@ -519,10 +564,7 @@ async function run(){
   const pill = document.getElementById("pill");
 
   const qImg = document.getElementById("qualityLetteringImg");
-  if (qImg){
-    qImg.src = qualityLetteringPath(quality);
-    qImg.onerror = () => { qImg.style.display = "none"; };
-  }
+  if (qImg) qImg.src = withCacheBust(qualityLetteringPath(quality));
 
   const th = qualityTheme(quality);
   qualityDesc.textContent = th.desc;
@@ -573,6 +615,7 @@ async function run(){
       statusText.className = "big bad";
       statusHint.innerHTML = "Signature mismatch.";
       setBadge("Fake", "#ff3b5c");
+
       meta.innerHTML =
         This QR signature is not valid.<br> +
         Do not trust this product.;
@@ -583,9 +626,10 @@ async function run(){
     statusText.className = "big warn";
     statusHint.innerHTML = "Verification failed.";
     setBadge("Error", "#ffb000");
+
     meta.innerHTML =
       Your browser could not verify the signature.<br> +
-      Most common reason: wrong public key or bad signature data.;
+      Most common reason: the public key was not pasted correctly into verify.html.;
   }
 }
 
